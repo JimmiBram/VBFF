@@ -102,7 +102,7 @@ squares = [x * x for x in range(5)]
 print(squares)
 # Task: Use list comprehension to create a list of even numbers from 0 to 10.
 
-# 16. Tuples
+# 16. Tuples (immutable as opposed to lists)
 my_tuple = (1, 2, 3)
 print(my_tuple[1])
 # Task: Create a tuple with three items and print the last item.
@@ -184,3 +184,62 @@ person = {"name": "Alice", "age": 25}
 print(person.keys())   # dict_keys(['name', 'age'])
 print(person.values()) # dict_values(['Alice', 25])
 # Task: Use `.get
+
+
+#Dictionaries extended:
+#------------------------
+# Sample dictionary
+my_dict = {'a': 1, 'b': 2, 'c': 3}
+
+# 1. clear()
+my_dict.clear()  # Removes all items
+print("After clear:", my_dict)
+
+# Reset dictionary for further demonstration
+my_dict = {'a': 1, 'b': 2, 'c': 3}
+
+# 2. copy()
+new_dict = my_dict.copy()  # Returns a shallow copy
+print("Copy of dictionary:", new_dict)
+
+# 3. fromkeys()
+keys = ('key1', 'key2', 'key3')
+default_value_dict = dict.fromkeys(keys, 0)  # Creates a dictionary with specified keys and a single value
+print("From keys:", default_value_dict)
+
+# 4. get()
+value = my_dict.get('a', 'default_value')  # Returns value for specified key or default if key not found
+print("Get 'a':", value)
+value = my_dict.get('z', 'default_value')
+print("Get 'z' with default:", value)
+
+# 5. items()
+print("Items:", list(my_dict.items()))  # Returns view object of (key, value) pairs
+
+# 6. keys()
+print("Keys:", list(my_dict.keys()))  # Returns view object of keys
+
+# 7. values()
+print("Values:", list(my_dict.values()))  # Returns view object of values
+
+# 8. pop()
+popped_value = my_dict.pop('b', 'default_value')  # Removes specified key and returns its value, or default if not found
+print("Pop 'b':", popped_value)
+print("After pop 'b':", my_dict)
+
+# 9. popitem()
+popped_item = my_dict.popitem()  # Removes and returns last inserted (key, value) pair
+print("Popitem:", popped_item)
+print("After popitem:", my_dict)
+
+# Reset dictionary for further demonstration
+my_dict = {'a': 1, 'b': 2, 'c': 3}
+
+# 10. setdefault()
+default_value = my_dict.setdefault('d', 4)  # Inserts key with value if key is not present, returns the key's value
+print("Setdefault 'd':", default_value)
+print("After setdefault 'd':", my_dict)
+
+# 11. update()
+my_dict.update({'e': 5, 'f': 6})  # Updates dictionary with specified key-value pairs
+print("After update:", my_dict)
