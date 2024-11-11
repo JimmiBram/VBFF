@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../jss/scripts.js"></script>
+    <title>Home</title>
+</head>
+<body>
+    {% include 'menu.html' %}
+    
+    <div>
+        {% if name %}
+            <div style="background-color:white;">
+                <h2>{{ name }} er en numsefisk!</h2>
+                <p><img src="/images/numsefisk.jpg"></p>
+            </div>
+        {% else %}
+            <h1>Hvem er du?</h1>
+            <form method="get" action="/querystring">
+                <input type="text" name="name" placeholder="Enter your name" required>
+                <button type="submit">Submit</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
