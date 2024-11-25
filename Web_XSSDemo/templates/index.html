@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask XSS Demo</title>
+    <script src="/static/script.js"></script>
+    <style>
+        /* Style for the left div */
+        .left-div {
+            float: left;
+            width: 300px;
+            min-height: 500px;
+            background-color: lightblue;
+            margin: 10px;
+            padding:20px
+        }
+
+        /* Style for the right div */
+        .right-div {
+            float: left;
+            width: 300px;
+            min-height: 500px;
+            background-color: lightgreen;
+            margin: 10px;
+            padding:20px;
+        }
+
+        /* Clearfix to handle floating elements */
+        .container::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        /* Optional: Styling for the body */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flask XSS and Console Scripting Demo</h1>
+
+   <div class="left-div">
+                <h2>Post a Comment</h2>
+                <form method="POST">
+                    <label for="comment">Enter your comment:</label><br>
+                    <input type="text" id="comment" name="comment"><br><br>
+                    <button type="submit">Submit</button>
+                </form>
+                <hr>
+                <h2>Comments</h2>
+                <div id="comments">
+                    {% for comment in comments %}
+                        <p>{{ comment|safe }}</p>
+                    {% endfor %}
+                </div>
+    </div>
+    <div class="right-div">
+                <h2>Image Demo</h2>
+                <img id="demo-image" src="/static/default_image.jpg" alt="Default Image" width="200">
+            
+                <script>
+                    // Pass the base64 image as a global variable to the JavaScript file
+                    const BASE64_IMAGE = "{{ base64_image }}";
+                </script>
+
+    </div>
+
+</body>
+</html>
