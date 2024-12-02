@@ -53,7 +53,7 @@ def success():
     if 'username' not in session:
         flash('Du skal være logget ind for at se denne side.', 'danger')
         return redirect(url_for('login'))
-    flag = str(hash(session['username']))
+    flag = str(hash_password(session['username']))
     flag = flag[-4:]
     return render_template('success.html', username=session['username'], flag=flag)
 
