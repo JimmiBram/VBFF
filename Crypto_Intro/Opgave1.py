@@ -1,3 +1,8 @@
+"""
+Brug funktionen herunder til at bryde koden fra Discord
+Husk at for at dekryptere skal man bruge et minus tal
+"""
+
 FIRST_CHAR_CODE = ord("A")
 LAST_CHAR_CODE = ord("Z")
 CHAR_RANGE = LAST_CHAR_CODE - FIRST_CHAR_CODE + 1
@@ -26,13 +31,4 @@ def caesar_shift(message, shift):
             result += char
 
     return result
-
-
-user_message = input("Message to Encrypt: ")
-user_shift_key = int(input("Shift Key (integer): "))
-cipher_text = caesar_shift(user_message, user_shift_key)
-uncipher_text = caesar_shift(cipher_text,-user_shift_key)
-print(f"Encrypted Text: {cipher_text}")
-print(f"Decrypted Text: {uncipher_text}")
-
 
