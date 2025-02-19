@@ -2,8 +2,9 @@ from flask import Flask, request, render_template_string
 from flask_socketio import SocketIO
 import time
 
-# Set the maximum pagehits value (for the last 60 seconds)
-MAX_PAGEHITS = 100
+# Set constants
+MAX_PAGEHITS = 100     # Maximum pagehits value
+TIME_WINDOW = 30       # Time window (in seconds) for counting pagehits
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -14,8 +15,8 @@ socketio = SocketIO(app)
 hits = []
 
 def get_recent_hits():
-    """Return hits from the last 60 seconds."""
-    cutoff = time.time() - 60
+    """Return hits from the last TIME_WINDOW seconds."""
+    cutoff = time.time() - TIME_WINDOW
     return [hit for hit in hits if hit['timestamp'] >= cutoff]
 
 def broadcast_update():
@@ -25,7 +26,7 @@ def broadcast_update():
         'count': len(recent_hits),
         'hits': recent_hits
     }
-    # Removed the broadcast=True option (it is now broadcast by default)
+    # Removed the broadcast=True option (it is broadcast by default)
     socketio.emit('update', data)
 
 @app.route('/')
@@ -68,8 +69,9 @@ def index():
       <!-- Gauge.js library -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/gauge.js/1.3.7/gauge.min.js"></script>
       <script>
-        // Pass the MAX_PAGEHITS constant from Flask into JavaScript.
+        // Pass constants from Flask into JavaScript.
         const MAX_PAGEHITS = {{ max_pagehits }};
+        const TIME_WINDOW = {{ time_window }};
       </script>
     </head>
     <body>
@@ -80,13 +82,13 @@ def index():
         <div id="clock"></div>
       </div>
       <div id="content">
-        <!-- The header text will be updated to "X pagehits last 60 seconds" -->
-        <div id="pagehits-text">0 pagehits last 60 seconds</div>
+        <!-- The header text will be updated to "X pagehits last TIME_WINDOW seconds" -->
+        <div id="pagehits-text">0 pagehits last {{ time_window }} seconds</div>
         <div id="gauge-container">
           <canvas id="gauge-canvas" width="300" height="150"></canvas>
         </div>
         <div id="log">
-          <h3>Hit Log (last 60 seconds)</h3>
+          <h3>Hit Log (last {{ time_window }} seconds)</h3>
           <table id="log-table">
             <thead>
               <tr>
@@ -160,7 +162,7 @@ def index():
           gauge.set(Math.min(data.count, MAX_PAGEHITS));
 
           // Update the pagehits text with the current count.
-          document.getElementById('pagehits-text').innerText = data.count + " pagehits last 60 seconds";
+          document.getElementById('pagehits-text').innerText = data.count + " pagehits last " + TIME_WINDOW + " seconds";
 
           // Update the log table.
           var tbody = document.querySelector('#log-table tbody');
@@ -195,7 +197,7 @@ def index():
     </body>
     </html>
     """
-    response = render_template_string(html, max_pagehits=MAX_PAGEHITS)
+    response = render_template_string(html, max_pagehits=MAX_PAGEHITS, time_window=TIME_WINDOW)
     elapsed = time.time() - start_time
 
     # Record this hit.
@@ -206,8 +208,8 @@ def index():
     }
     hits.append(hit)
 
-    # Remove any hits older than 60 seconds.
-    cutoff = time.time() - 60
+    # Remove any hits older than TIME_WINDOW seconds.
+    cutoff = time.time() - TIME_WINDOW
     hits[:] = [h for h in hits if h['timestamp'] >= cutoff]
 
     broadcast_update()
@@ -222,7 +224,7 @@ def background_updater():
     """Background task: every second, purge expired hits and update clients."""
     while True:
         socketio.sleep(1)
-        cutoff = time.time() - 60
+        cutoff = time.time() - TIME_WINDOW
         hits[:] = [h for h in hits if h['timestamp'] >= cutoff]
         broadcast_update()
 
